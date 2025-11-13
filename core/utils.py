@@ -1,5 +1,5 @@
-from typing import Iterable
 import re
+from typing import Iterable
 
 
 def calculate_balance(incomes: Iterable[float], expenses: Iterable[float]) -> float:
