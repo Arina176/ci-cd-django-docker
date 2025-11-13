@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Калькулятор личных средств</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #111827;
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.1);
+            --danger: #ef4444;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #1f2937 0, var(--bg) 40%, #020617 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 960px;
+            width: 100%;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(17,24,39,0.98));
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow:
+              0 24px 60px rgba(15,23,42,0.9),
+              0 0 0 1px rgba(148,163,184,0.06);
+            backdrop-filter: blur(24px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .pill {
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 12px;
+            border: 1px solid rgba(59,130,246,0.3);
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+            border-radius: 12px;
+            padding: 10px 12px;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(148,163,184,0.4);
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(59,130,246,0.4);
+            background: rgba(15,23,42,1);
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: white;
+            box-shadow:
+              0 12px 30px rgba(37,99,235,0.45),
+              0 0 0 1px rgba(191,219,254,0.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.1s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+            box-shadow:
+              0 18px 40px rgba(37,99,235,0.55),
+              0 0 0 1px rgba(191,219,254,0.7);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow:
+              0 10px 24px rgba(37,99,235,0.45),
+              0 0 0 1px rgba(191,219,254,0.7);
+        }
+
+        .icon {
+            font-size: 16px;
+        }
+
+        .result-card {
+            margin-top: 20px;
+            padding: 16px 18px;
+            border-radius: 16px;
+            background: rgba(17,24,39,0.9);
+            border: 1px solid rgba(148,163,184,0.4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .result-main {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .result-main.positive {
+            color: #22c55e;
+        }
+
+        .result-main.negative {
+            color: var(--danger);
+        }
+
+        .result-caption {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(148,163,184,0.4);
+        }
+
+        .error {
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(248,113,113,0.5);
+            background: rgba(185,28,28,0.12);
+            color: #fecaca;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 18px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="header">
+            <div>
+                <div class="title">Калькулятор личных средств</div>
+                <div class="subtitle">Введи свои доходы и расходы — посмотрим, сколько остаётся в конце месяца.</div>
+            </div>
+            <div class="pill">Демо CI/CD · Docker · Django</div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="grid">
+                <div class="field">
+                    <label for="incomes">Доходы</label>
+                    <textarea id="incomes" name="incomes" placeholder="30000, 12000, 5000">{{ incomes_input }}</textarea>
+                    <div class="hint">Разделяй суммы запятыми, точками с запятой или пробелами.</div>
+                </div>
+                <div class="field">
+                    <label for="expenses">Расходы</label>
+                    <textarea id="expenses" name="expenses" placeholder="Аренда 15000, продукты 8000, транспорт 2500">{{ expenses_input }}</textarea>
+                    <div class="hint">Можно вводить так же, как доходы — мы вытащим все числа из строки.</div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit">
+                    <span class="icon">🧮</span>
+                    <span>Посчитать баланс</span>
+                </button>
+            </div>
+        </form>
+
+        {% if error %}
+            <div class="error">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if result is not None %}
+            <div class="result-card">
+                <div>
+                    <div class="result-main {% if result >= 0 %}positive{% else %}negative{% endif %}">
+                        Остаток: {{ result }} ₽
+                    </div>
+                    <div class="result-caption">
+                        {% if result >= 0 %}
+                            Неплохо! Можно отложить часть в сбережения 💾
+                        {% else %}
+                            Расходы превышают доходы — есть повод пересмотреть бюджет ⚠️
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="badges">
+                    <div class="badge">Доходы: {{ total_incomes }} ₽</div>
+                    <div class="badge">Расходы: {{ total_expenses }} ₽</div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

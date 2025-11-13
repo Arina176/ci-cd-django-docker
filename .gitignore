@@ -14,8 +14,8 @@ venv/
 .idea/
 .vscode/
 
-# Env files
-.env
+## Env files
+#.env
 
 # Docker
 staticfiles/
