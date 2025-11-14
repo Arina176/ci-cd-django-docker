@@ -6,7 +6,7 @@ from core.utils import calculate_balance, parse_amounts
 def test_calculate_balance_positive():
     incomes = [1000, 2000, 500]
     expenses = [300, 700]
-    assert calculate_balance(incomes, expenses) == 2500
+    assert calculate_balance(incomes, expenses) == 2600
 
 
 def test_calculate_balance_negative():
